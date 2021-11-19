@@ -8,9 +8,11 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.InputStream;
 
 @WebServlet(name = "FileUploadServlet", urlPatterns = { "/upload" })
 
@@ -23,13 +25,29 @@ import java.io.PrintWriter;
 public class FileUploadServlet extends HttpServlet {
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.setContentType("text/html");
-		PrintWriter printWriter = resp.getWriter();
-		String uploadPath = getServletContext().getRealPath("");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		response.setContentType("text/html");
+		PrintWriter printWriter = response.getWriter();
+		
+		StringBuilder fileContent = new StringBuilder("");
+		
 		
 		try {
-			printWriter.write("Server upload dir: " + uploadPath);
+			for(Part part : request.getParts()) {
+				String name = part.getName();
+				printWriter.write("Name: " + name + "\n");
+				InputStream input = part.getInputStream();
+				
+				int c = input.read();
+				while(c != -1) {
+					fileContent.append((char)c);
+					c = input.read();
+				}
+				
+				printWriter.write(fileContent.toString());
+		}
+			
 		}
 		finally {
 			printWriter.close();
