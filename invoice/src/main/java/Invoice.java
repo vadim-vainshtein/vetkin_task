@@ -1,8 +1,10 @@
 package invoice;
 
-import java.time.DateTimeFormatter;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.format.ResolverStyle;
+
+import java.time.format.DateTimeParseException;
 
 public class Invoice {
 	/**
@@ -14,17 +16,17 @@ public class Invoice {
 	 */
 
 	private final int MAX_COMMENT_LENGTH = 256;
-	private final String DATE_FORMAT = "yyyy-MM-dd";
+	private final String DATE_FORMAT = "uuuu-MM-dd";
 
 	// на всякий случай - immutable
 	private final String date;
 	private final int number; // возможно, лучше id?..
-	private final int sum;
+	private final long sum;
 	private final String comment;
 
 	public String getDate() { return date; }
 	public int getNumber() { return number; }
-	public int getSum() { return sum; }
+	public long getSum() { return sum; }
 	public String getComment() { return comment; }
 
 	public Invoice() {
@@ -35,13 +37,13 @@ public class Invoice {
 		this.comment = "";
 	}
 
-	public Invoice(String date, int number, int sum)
+	public Invoice(String date, int number, long sum)
 			throws IllegalArgumentException {
 
 		this(date, number, sum, "");
 	}
 
-	public Invoice(String date, int number, int sum, String comment)
+	public Invoice(String date, int number, long sum, String comment)
 			throws IllegalArgumentException {
 
 		this.date = date;
@@ -72,7 +74,12 @@ public class Invoice {
 		}
 
 		if(comment.length() > MAX_COMMENT_LENGTH) {
+			throw new IllegalArgumentException(
+				"Comment cannot be longer than " + MAX_COMMENT_LENGTH +
+				": " + comment);
+		}
 	}
+
 
 
 	private boolean isDateValid() {

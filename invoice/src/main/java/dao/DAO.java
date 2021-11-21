@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 
 import java.sql.SQLException;
 
-public abstract class DAO {
+public class DAO {
 /*
  * Базовый класс для непосредственной работы с БД.
  * Имеет методы для выполнения запросов executeUpdate() и executeQuery()
@@ -42,7 +42,7 @@ public abstract class DAO {
 
 	protected int executeUpdate(String queryStr) {
 
-		int result;
+		int result = 0;
 
 		try(Connection connection =
 				DriverManager.getConnection(url, username, password)) {
@@ -60,13 +60,13 @@ public abstract class DAO {
 	}
 
 
-	protected ResultSet executeQuery(String queryStr) throws {
+	protected ResultSet executeQuery(String queryStr) {
 		/*
 		 * отправляет SQL-запрос queryStr в базу,
 		 * возвращает результат в resultSet
 		 */
 
-		ResultSet resultSet;
+		ResultSet resultSet = null;
 
 		// говорят, в таком варианте connection закроется автоматически в случае исключения
 		try(Connection connection =
@@ -86,7 +86,7 @@ public abstract class DAO {
 	}
 
 
-	protected printExceptionInfo(SQLException e) {
+	protected void printExceptionInfo(SQLException e) {
 
 		e.printStackTrace(System.err);
                 System.err.println("SQLState: " +

@@ -1,2 +1,4 @@
 invoice/dao/DAO.class
+invoice/InvoiceController.class
 invoice/Main.class
+invoice/Invoice.class

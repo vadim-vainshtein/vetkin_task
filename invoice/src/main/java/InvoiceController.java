@@ -31,7 +31,7 @@ public class InvoiceController {
 
 	public InvoiceController() {
 
-		this(null, System.lineSeparator);
+		this(null, System.lineSeparator());
 	}
 
 	public InvoiceController(String csvString) {
@@ -55,7 +55,7 @@ public class InvoiceController {
 				"new InvoiceController(String)"
 				);
 			exception.initCause(new NullPointerException("csvString = null"));
-			throw e;
+			throw exception;
 		}
 
 		// разберём текст на строки
@@ -64,7 +64,7 @@ public class InvoiceController {
 		/* каждую строку преобразуем методом parseInvoiceString()
 		 * в объект Invoice, и добавим в массив
 		 */
-		for(int i = 0; i < lines.length(); i++) {
+		for(int i = 0; i < lines.length; i++) {
 
 			Invoice invoice;
 
@@ -96,14 +96,14 @@ public class InvoiceController {
 		}
 
 		// обявим поля, необходимые для инициализации Invoice
-		String date fields[0].trim();
-		int number;
-		int sum;
-		String comment = fields[3].trim;
+		String date = fields[0].trim();
+		int number = 0;
+		int sum = 0;
+		String comment = fields[3].trim();
 
 		//попробуем распарсить числа
 		try {
-			number = Integer.ParseInt(fields[1].trim());
+			number = Integer.parseInt(fields[1].trim());
 		} catch(NumberFormatException e) {
 			IllegalArgumentException exception =
 					new IllegalArgumentException(
@@ -116,7 +116,7 @@ public class InvoiceController {
 
 		try {
 			// с float нужно ещё заменить десятичный разделитель с ',' на '.'
-			fSum = Float.ParseFloat(fields[2].replaceAll(",", "."));
+			fSum = Float.parseFloat(fields[2].replaceAll(",", "."));
 		} catch(NumberFormatException e) {
 			IllegalArgumentException exception =
 					new IllegalArgumentException(

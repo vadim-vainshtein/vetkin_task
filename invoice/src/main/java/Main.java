@@ -13,6 +13,6 @@ public class Main {
 			"VALUES ('2021-11-01', 1, 10000, 'Тест')";
 
 		System.out.println(query);
-		dao.executeUpdate(query);
+		//dao.executeUpdate(query);
 	}
 }
