@@ -97,4 +97,36 @@ public class Invoice {
 
 		return true;
 	}
+
+
+	@Override
+	public int hashCode() {
+
+		final int prime = 31;
+		int result = 1;
+
+		result = prime + date.hashCode();
+		result = prime * result + number;
+		result = prime * result + (int)sum;
+		result = prime * result + comment.hashCode();
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if(obj == null) return false;
+		if(this == obj) return true;
+		if(this.getClass() != obj.getClass()) return false;
+
+		Invoice other = (Invoice) obj;
+
+		if(number != other.number) return false;
+		if(sum != other.sum) return false;
+		if(!date.equals(other.date)) return false;
+		if(!comment.equals(other.comment)) return false;
+
+		return true;
+	}
 }

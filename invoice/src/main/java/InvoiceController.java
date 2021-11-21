@@ -66,6 +66,8 @@ public class InvoiceController {
 		 */
 		for(int i = 0; i < lines.length; i++) {
 
+			if(lines[i].isBlank()) continue;
+
 			Invoice invoice;
 
 			try {
@@ -75,7 +77,8 @@ public class InvoiceController {
 				IllegalArgumentException exception =
 					new IllegalArgumentException(
 						"Invalid CSV: an error at line " +
-						(i + 1) + ":\n" + lines[i] + "\n");
+						(i + 1) + ":\n\n" + lines[i] + "\n");
+				exception.initCause(e);
 				throw exception;
 			}
 
@@ -89,9 +92,9 @@ public class InvoiceController {
 		//делим строку на поля
 		String[] fields = str.split(SEPARATOR);
 
-		if(fields.length != 4) {
+		if(fields.length < 3) {
 			throw new IllegalArgumentException(
-					"Improper number of parameters to build an Invoice object" +
+					"Improper number of parameters to build an Invoice object: " +
 					+ fields.length );
 		}
 
@@ -99,7 +102,10 @@ public class InvoiceController {
 		String date = fields[0].trim();
 		int number = 0;
 		int sum = 0;
-		String comment = fields[3].trim();
+		String comment = "";
+		if(fields.length == 4) {
+			 comment = fields[3].trim();
+		 }
 
 		//попробуем распарсить числа
 		try {
@@ -128,6 +134,16 @@ public class InvoiceController {
 		 * выкинет IllegalArgumentException, если формат данных неверный
 		 */
 		return new Invoice(date, number, sum, comment);
+	}
+
+
+	public void saveToDB() {
+
+		for(Invoice invoice : invoices) {
+			System.out.printf("%s %d %d %s\n",
+					invoice.getDate(), invoice.getNumber(),
+					invoice.getSum(), invoice.getComment());
+		}
 	}
 
 }
