@@ -8,28 +8,30 @@ import java.sql.PreparedStatement;
 
 import java.sql.SQLException;
 
-public class DAO {
+public abstract class DAO {
 /*
  * Базовый класс для непосредственной работы с БД.
+ * Имеет методы для выполнения запросов executeUpdate() и executeQuery()
  */
 
-	// константные значения по умолчанию
+// TODO: обработка исключений и логирование - ?..
 
-	private static final String DEFAULT_URL = "jdbc:mysql://localhost:3306/invoice";
-	private static final String DEFAULT_USER = "mysql";
-	private static final String DEFAULT_PASSWORD = "123456";
-
-	// адрес БД
+	// адрес БД, пользователь, пароль
 	private final String url;
 	private final String username;
 	private final String password;
+
+
+	// значения по умолчанию
+	private static final String DEFAULT_URL = "jdbc:mysql://localhost:3306/invoice";
+	private static final String DEFAULT_USER = "mysql";
+	private static final String DEFAULT_PASSWORD = "123456";
 
 	public DAO() {
 
 		this(DEFAULT_URL, DEFAULT_USER, DEFAULT_PASSWORD);
 	}
 
-//TODO: Custom exception
 	public DAO(String url, String username, String password) {
 
 		this.url = url;
@@ -38,7 +40,7 @@ public class DAO {
 	}
 
 
-	public int executeUpdate(String queryStr) throws Exception {
+	protected int executeUpdate(String queryStr) {
 
 		int result;
 
@@ -50,16 +52,15 @@ public class DAO {
 			connection.close();
 
 		} catch(SQLException e) {
-//TODO: Custom exception
-			e.printStackTrace();
-			throw new Exception();
+//TODO: выбросить своё исключение?..
+			printExceptionInfo(e);
 		}
 
 		return result;
 	}
 
 
-	public ResultSet executeQuery(String queryStr) throws Exception {
+	protected ResultSet executeQuery(String queryStr) throws {
 		/*
 		 * отправляет SQL-запрос queryStr в базу,
 		 * возвращает результат в resultSet
@@ -76,11 +77,24 @@ public class DAO {
 			connection.close();
 
 		} catch(SQLException e) {
-//TODO: Custom exception
-			e.printStackTrace();
-			throw new Exception();
+
+//TODO: выбросить своё исключение?..
+			printExceptionInfo(e);
 		}
 
 		return resultSet;
+	}
+
+
+	protected printExceptionInfo(SQLException e) {
+
+		e.printStackTrace(System.err);
+                System.err.println("SQLState: " +
+                    ((SQLException)e).getSQLState());
+
+                System.err.println("Error Code: " +
+                    ((SQLException)e).getErrorCode());
+
+                System.err.println("Message: " + e.getMessage());
 	}
 }
